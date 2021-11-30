@@ -102,6 +102,6 @@ body {
   pointer-events: none;
 }
 
-.ui-root > * {
+.ui-root>* {
   pointer-events: all;
 }
