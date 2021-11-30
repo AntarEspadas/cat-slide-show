@@ -17,11 +17,14 @@ export class UI extends React.Component<UIProps, UIState> {
     render() {
         return (
             <div className="ui-root">
-                <button className={`nav-button ${this.state.shown ? "" : "ui-hidden"}`} id="prev-button" onClick={this.props.onPrevClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
-                <button className={`nav-button ${this.state.shown ? "" : "ui-hidden"}`} id="next-button" onClick={this.props.onNextClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
+                <button className={`nav-button ui-button ${this.getHiddenClass()}`} id="prev-button" onClick={this.props.onPrevClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
+                <button className={`nav-button ui-button ${this.getHiddenClass()}`} id="next-button" onClick={this.props.onNextClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
+                <button className={`ui-button ${this.getHiddenClass()} ${this.props.paused ? "pause" : "play"}`} id="pause-button" onClick={this.props.onPausePlayClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
             </div>
         )
     }
+
+    getHiddenClass = () => this.state.shown ? "" : "ui-hidden"
 
     componentDidMount() {
         document.addEventListener("mousemove", this.mouseMoveHandler)
@@ -53,6 +56,8 @@ export class UI extends React.Component<UIProps, UIState> {
 export interface UIProps {
     onNextClick?: () => void
     onPrevClick?: () => void
+    onPausePlayClick?: () => void
+    paused: boolean
 }
 
 interface UIState {

@@ -59,22 +59,28 @@ body {
   align-items: center;
 }
 
-.nav-button {
-  top: 50vh;
-  position: fixed;
+button {
   padding: 0;
   margin: 0;
+  border: none;
+}
+
+.nav-button {
+  top: 50vh;
   width: min(10vw, 10vh);
   height: min(10vw, 10vh);
-  border: none;
   background-image: url("./img/arrow.png");
   background-size: cover;
   border-radius: 50%;
+}
+
+.ui-button {
+  position: fixed;
   opacity: 0.25;
   transition: opacity 250ms ease-out;
 }
 
-.nav-button:hover {
+.ui-button:hover {
   opacity: 0.75;
   transition: opacity 500 ease-out;
   cursor: pointer;
@@ -86,8 +92,26 @@ body {
 }
 
 #next-button {
-  transform: translate(-50%, -50%);
   right: 0;
+  transform: translate(-50%, -50%);
+}
+
+#pause-button {
+  top: 1vh;
+  left: 50vw;
+  transform: translateX(-50%);
+  width: min(5vw, 5vh);
+  height: min(5vw, 5vh);
+  border-radius: 5%;
+  background-size: cover;
+}
+
+.pause {
+  background-image: url("./img/play.png");
+}
+
+.play {
+  background-image: url("./img/pause.png");
 }
 
 .ui-hidden {

@@ -12,7 +12,8 @@ class App extends React.Component<AppProps, AppState> {
     state: AppState = {
         index: 0,
         images: [],
-        ready: false
+        ready: false,
+        paused: false
     }
     catGetter: ImageGetter = new CatApiGetter()
 
@@ -49,7 +50,7 @@ class App extends React.Component<AppProps, AppState> {
                         ? <ImgListPresentation slideDuration={this.slideDuration} imgAlt={"cat"} index={this.state.index} images={this.state.images} />
                         : <></>
                 }
-                <UI onPrevClick={this.headBack} onNextClick={this.headForward} />
+                <UI onPrevClick={this.headBack} onNextClick={this.headForward} onPausePlayClick={this.pausePlayHandler} paused={this.state.paused} />
             </>
         )
     }
@@ -80,12 +81,13 @@ class App extends React.Component<AppProps, AppState> {
 
         if (!this.canMoveBack) return
         this.canMoveBack = false
+
         setTimeout(() => {
             this.canMoveBack = true
         }, this.slideDuration);
 
-
         if (this.state.index <= 0) return
+        this.pause();
         this.setState(state => {
             return { index: state.index - 1 }
         })
@@ -97,20 +99,29 @@ class App extends React.Component<AppProps, AppState> {
         this.interval = Visibility.every(this.intervalDuration, this.headForward)
     }
 
+    pausePlayHandler = () => {
+        this.state.paused
+            ? this.play()
+            : this.pause()
+    }
+
     pause() {
-        Visibility.every(this.intervalDuration, this.headForward)
+        Visibility.stop(this.interval)
+        this.setState({ paused: true })
     }
 
     play() {
         Visibility.stop(this.interval)
-        Visibility.every(this.intervalDuration, this.headForward)
+        this.interval = Visibility.every(this.intervalDuration, this.headForward)
+        this.setState({ paused: false })
     }
 }
 
 interface AppState {
     index: number,
     images: string[]
-    ready: boolean
+    ready: boolean,
+    paused: boolean
 }
 
 interface AppProps {
