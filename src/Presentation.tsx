@@ -12,11 +12,11 @@ export class Presentation extends React.Component<PresentationProps, Presentatio
         const slideProps = this.getProps()
         this.prevSlideProps = slideProps
         return (
-            <>
+            <div className="presentation">
                 <Slide src={slideProps[0].src} alt={slideProps[0].alt} offset={slideProps[0].offset} hidden={slideProps[0].hidden} slideDuration={slideProps[0].slideDuration} />
                 <Slide src={slideProps[1].src} alt={slideProps[1].alt} offset={slideProps[1].offset} hidden={slideProps[1].hidden} slideDuration={slideProps[1].slideDuration} />
                 <Slide src={slideProps[2].src} alt={slideProps[2].alt} offset={slideProps[2].offset} hidden={slideProps[2].hidden} slideDuration={slideProps[2].slideDuration} />
-            </>
+            </div>
         )
     }
 
