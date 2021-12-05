@@ -6,7 +6,7 @@ export class UI extends React.Component<UIProps, UIState> {
 
     hideTimeout: any = 0
 
-    canHide: boolean = true
+    hidePreventors: number = 0
 
     didMount: boolean = false
 
@@ -17,9 +17,11 @@ export class UI extends React.Component<UIProps, UIState> {
     render() {
         return (
             <div className="ui-root">
-                <button className={`nav-button ui-button ${this.getHiddenClass()}`} id="prev-button" onClick={this.props.onPrevClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
-                <button className={`nav-button ui-button ${this.getHiddenClass()}`} id="next-button" onClick={this.props.onNextClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
-                <button className={`ui-button ${this.getHiddenClass()} ${this.props.paused ? "pause" : "play"}`} id="pause-button" onClick={this.props.onPausePlayClick} onMouseEnter={this.mouseEnterHandler} onMouseLeave={this.mouseLeaveHandler} />
+                <button className={`nav-button ui-element ${this.getHiddenClass()}`} id="prev-button" onClick={this.props.onPrevClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
+                <button className={`nav-button ui-element ${this.getHiddenClass()}`} id="next-button" onClick={this.props.onNextClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
+                <button className={`ui-element ${this.getHiddenClass()} ${this.props.paused ? "pause" : "play"}`} id="pause-button" onClick={this.props.onPausePlayClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
+                <input className={`ui-element ${this.getHiddenClass()}`} type="range" id="interval-slider" />
+                <input className={`ui-element ${this.getHiddenClass()}`} type="number" id="interval-input" onFocus={this.addHidePreventor} onBlur={this.removeHidePreventor} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
             </div>
         )
     }
@@ -27,21 +29,22 @@ export class UI extends React.Component<UIProps, UIState> {
     getHiddenClass = () => this.state.shown ? "" : "ui-hidden"
 
     componentDidMount() {
-        document.addEventListener("mousemove", this.mouseMoveHandler)
+        document.addEventListener("mousemove", this.hideUI)
     }
 
-    mouseEnterHandler = () => {
+    addHidePreventor = () => {
         window.clearTimeout(this.hideTimeout)
-        this.canHide = false
+        this.hidePreventors++
     }
 
-    mouseLeaveHandler = () => {
-        this.canHide = true
+    removeHidePreventor = () => {
+        this.hidePreventors--
+        this.hideUI()
     }
 
-    mouseMoveHandler = () => {
+    hideUI = () => {
 
-        if (!this.canHide) return
+        if (this.hidePreventors) return
 
         window.clearTimeout(this.hideTimeout)
 
