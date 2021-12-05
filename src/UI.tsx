@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react"
+import React, { ChangeEvent, KeyboardEvent } from "react"
 
 export class UI extends React.Component<UIProps, UIState> {
 
@@ -41,6 +41,7 @@ export class UI extends React.Component<UIProps, UIState> {
                     onMouseEnter={this.addHidePreventor}
                     onMouseLeave={this.removeHidePreventor}
                     onChange={this.intervalInputChanged}
+                    onKeyDown={this.intervalInputKeyDown}
                 />
             </div>
         )
@@ -50,6 +51,11 @@ export class UI extends React.Component<UIProps, UIState> {
 
     componentDidMount() {
         document.addEventListener("mousemove", this.hideUI)
+    }
+
+    intervalInputKeyDown(args: KeyboardEvent<HTMLInputElement>) {
+        if (args.key == "Enter")
+            (args.nativeEvent.target as HTMLInputElement).blur()
     }
 
     intervalInputChanged = (args: ChangeEvent<HTMLInputElement>) => {
