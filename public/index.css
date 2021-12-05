@@ -74,13 +74,13 @@ button {
   border-radius: 50%;
 }
 
-.ui-button {
+.ui-element {
   position: fixed;
   opacity: 0.25;
   transition: opacity 250ms ease-out;
 }
 
-.ui-button:hover {
+.ui-element:hover {
   opacity: 0.75;
   transition: opacity 500 ease-out;
   cursor: pointer;
@@ -104,6 +104,24 @@ button {
   height: min(5vw, 5vh);
   border-radius: 5%;
   background-size: cover;
+}
+
+#interval-slider {
+  display: none;
+  width: 10%;
+  height: 5vh;
+}
+
+#interval-input {
+  width: min(5vw, 5vh);
+  height: min(2.5vw, 2.5vh);
+  text-align: center;
+  font-size: min(2.5vw, 2.5vh);
+  padding: 0;
+}
+
+#interval-input::-webkit-inner-spin-button {
+  display: none;
 }
 
 .pause {

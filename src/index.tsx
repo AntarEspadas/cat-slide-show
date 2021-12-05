@@ -24,6 +24,7 @@ class App extends React.Component<AppProps, AppState> {
 
     interval: number = 0
     intervalDuration: number = 5000
+    intervalChangePending: boolean = false
 
     constructor(props: AppProps) {
         super(props)
@@ -50,7 +51,7 @@ class App extends React.Component<AppProps, AppState> {
                         ? <ImgListPresentation slideDuration={this.slideDuration} imgAlt={"cat"} index={this.state.index} images={this.state.images} />
                         : <></>
                 }
-                <UI onPrevClick={this.headBack} onNextClick={this.headForward} onPausePlayClick={this.pausePlayHandler} paused={this.state.paused} />
+                <UI onPrevClick={this.headBack} onNextClick={this.headForward} onPausePlayClick={this.pausePlayHandler} paused={this.state.paused} onIntervalChange={interval => this.setTimeInterval(interval)} minInterval={100} />
             </>
         )
     }
@@ -61,6 +62,10 @@ class App extends React.Component<AppProps, AppState> {
         this.canMoveForward = false
         setTimeout(() => {
             this.canMoveForward = true
+            if (this.intervalChangePending) {
+                this.intervalChangePending = false;
+                this.setTimeInterval(this.intervalDuration)
+            }
         }, this.slideDuration);
 
 
@@ -94,8 +99,12 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     setTimeInterval(interval: number) {
-        Visibility.stop(this.interval)
         this.intervalDuration = interval
+        if (!this.canMoveForward) {
+            this.intervalChangePending = true
+            return
+        }
+        Visibility.stop(this.interval)
         this.interval = Visibility.every(this.intervalDuration, this.headForward)
     }
 
