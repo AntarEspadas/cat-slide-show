@@ -62,10 +62,8 @@ class App extends React.Component<AppProps, AppState> {
         this.canMoveForward = false
         setTimeout(() => {
             this.canMoveForward = true
-            if (this.intervalChangePending) {
-                this.intervalChangePending = false;
-                this.setTimeInterval(this.intervalDuration)
-            }
+            this.intervalChangePending = false;
+            this.setTimeInterval(this.intervalDuration)
         }, this.slideDuration);
 
 
