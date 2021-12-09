@@ -5,7 +5,7 @@ import { CatApiGetter, ImageGetter, CataasGetter } from "./ImageGetters"
 import { UI } from "./UI"
 import Visibility from "visibilityjs"
 import { ImgListPresentation } from "./ImgListPresentation"
-
+import { Timeout } from "./Timeout"
 
 class App extends React.Component<AppProps, AppState> {
 
@@ -22,9 +22,8 @@ class App extends React.Component<AppProps, AppState> {
 
     slideDuration = 750
 
-    interval: number = 0
+    timeout: Timeout | undefined
     intervalDuration: number = 5000
-    intervalChangePending: boolean = false
 
     constructor(props: AppProps) {
         super(props)
@@ -40,7 +39,7 @@ class App extends React.Component<AppProps, AppState> {
                 }
             })
         })
-        this.interval = Visibility.every(this.intervalDuration, this.headForward)
+        this.timeout = new Timeout(this.intervalDuration, this.headForward)
     }
 
     render() {
@@ -62,8 +61,9 @@ class App extends React.Component<AppProps, AppState> {
         this.canMoveForward = false
         setTimeout(() => {
             this.canMoveForward = true
-            this.intervalChangePending = false;
             this.setTimeInterval(this.intervalDuration)
+            if (this.state.paused)
+                this.pause()
         }, this.slideDuration);
 
 
@@ -98,12 +98,9 @@ class App extends React.Component<AppProps, AppState> {
 
     setTimeInterval(interval: number) {
         this.intervalDuration = interval
-        if (!this.canMoveForward) {
-            this.intervalChangePending = true
-            return
-        }
-        Visibility.stop(this.interval)
-        this.interval = Visibility.every(this.intervalDuration, this.headForward)
+        if (!this.canMoveForward) return
+        this.timeout?.stop()
+        this.timeout = new Timeout(this.intervalDuration, this.headForward)
     }
 
     pausePlayHandler = () => {
@@ -113,14 +110,21 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     pause() {
-        Visibility.stop(this.interval)
+        if (this.timeout?.state == "running") {
+            this.timeout?.pause()
+        }
         this.setState({ paused: true })
     }
 
     play() {
-        Visibility.stop(this.interval)
-        this.interval = Visibility.every(this.intervalDuration, this.headForward)
         this.setState({ paused: false })
+        if (this.timeout?.state == "paused") {
+            this.timeout?.resume()
+            return
+        }
+        if (this.timeout?.state == "stopped") {
+
+        }
     }
 }
 
