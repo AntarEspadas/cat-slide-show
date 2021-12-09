@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { Presentation, SlideInfo, Slides } from "./Presentation";
 
 export class ImgListPresentation extends React.Component<ImgListPresentationProps, ImgListPresentationState> {
@@ -36,7 +36,11 @@ export class ImgListPresentation extends React.Component<ImgListPresentationProp
         this.adjustSlides()
 
         return (
-            <Presentation slides={this.slides} slideDuration={(this.props.slideDuration ?? 750) + "ms"} />
+            <Presentation
+                onMouseDown={this.props.onMouseDown}
+                onMouseUp={this.props.onMouseUp}
+                slides={this.slides}
+                slideDuration={(this.props.slideDuration ?? 750) + "ms"} />
         )
     }
 
@@ -75,7 +79,9 @@ export interface ImgListPresentationProps {
     index: number,
     baseIndex?: number,
     imgAlt: string,
-    slideDuration?: number
+    slideDuration?: number,
+    onMouseDown?: MouseEventHandler,
+    onMouseUp?: MouseEventHandler
 }
 
 interface ImgListPresentationState {

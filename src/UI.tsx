@@ -12,6 +12,11 @@ export class UI extends React.Component<UIProps, UIState> {
 
     didMount: boolean = false
 
+    progressBarElapsed: HTMLDivElement | null = null;
+    progressBarPending: HTMLDivElement | null = null;
+
+    animations: (Animation | undefined)[] = []
+
     constructor(props: UIProps) {
         super(props)
     }
@@ -24,12 +29,12 @@ export class UI extends React.Component<UIProps, UIState> {
 
         return (
             <div className="ui-root">
-                <button className={`nav-button ui-element ${this.getHiddenClass()}`} id="prev-button" onClick={this.props.onPrevClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
-                <button className={`nav-button ui-element ${this.getHiddenClass()}`} id="next-button" onClick={this.props.onNextClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
-                <button className={`ui-element ${this.getHiddenClass()} ${this.props.paused ? "pause" : "play"}`} id="pause-button" onClick={this.props.onPausePlayClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
-                <input className={`ui-element ${this.getHiddenClass()}`} type="range" id="interval-slider" min={0.75} max={30} />
+                <button className={`nav-button ui-button ${this.getHiddenClass()}`} id="prev-button" onClick={this.props.onPrevClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
+                <button className={`nav-button ui-button ${this.getHiddenClass()}`} id="next-button" onClick={this.props.onNextClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
+                <button className={`ui-button ${this.getHiddenClass()} ${this.props.paused ? "pause" : "play"}`} id="pause-button" onClick={this.props.onPausePlayClick} onMouseEnter={this.addHidePreventor} onMouseLeave={this.removeHidePreventor} />
+                <input className={`ui-button ${this.getHiddenClass()}`} type="range" id="interval-slider" min={0.75} max={30} />
                 <input
-                    className={`ui-element ${this.getHiddenClass()}`}
+                    className={`ui-button ${this.getHiddenClass()}`}
                     type="number"
                     id="interval-input"
                     value={interval}
@@ -43,8 +48,38 @@ export class UI extends React.Component<UIProps, UIState> {
                     onChange={this.intervalInputChanged}
                     onKeyDown={this.intervalInputKeyDown}
                 />
+                <div className={"progress-bar"} id="progress-bar-elapsed" ref={ref => this.progressBarElapsed = ref} />
+                <div className={"progress-bar"} id="progress-bar-pending" ref={ref => this.progressBarPending = ref} />
             </div>
         )
+    }
+
+    public restartProgressBar(duration: number) {
+        const keyframes: Keyframe[] = [
+            {
+                width: "100%"
+            },
+            {
+                width: "0%"
+            }
+        ]
+
+        this.animations = []
+
+        this.animations.push(this.progressBarPending?.animate(keyframes, { duration: duration, fill: "none" }))
+        this.animations.push(this.progressBarElapsed?.animate(keyframes, { duration: duration, direction: "reverse", fill: "none" }))
+    }
+
+    public pauseProgressBar() {
+        for (const animation of this.animations) {
+            animation?.pause()
+        }
+    }
+
+    public resumeProgressBar() {
+        for (const animation of this.animations) {
+            animation?.play()
+        }
     }
 
     getHiddenClass = () => this.state.shown ? "" : "ui-hidden"

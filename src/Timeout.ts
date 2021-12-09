@@ -50,6 +50,7 @@ export class Timeout {
 
         this._startTime = Date.now()
         this._timeoutId = visibilityTimeout(this._timeRemaining, this.callback)
+        this._state = "running"
     }
 
     public get state(): TimeoutState {

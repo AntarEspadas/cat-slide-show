@@ -1,4 +1,4 @@
-import React from "react"
+import React, { MouseEvent } from "react"
 import ReactDOM from "react-dom"
 import { Presentation, SlideInfo, Slides } from "./Presentation"
 import { CatApiGetter, ImageGetter, CataasGetter } from "./ImageGetters"
@@ -25,6 +25,8 @@ class App extends React.Component<AppProps, AppState> {
     timeout: Timeout | undefined
     intervalDuration: number = 5000
 
+    ui: UI | null = null;
+
     constructor(props: AppProps) {
         super(props)
     }
@@ -40,6 +42,7 @@ class App extends React.Component<AppProps, AppState> {
             })
         })
         this.timeout = new Timeout(this.intervalDuration, this.headForward)
+        this.ui?.restartProgressBar(this.intervalDuration)
     }
 
     render() {
@@ -47,10 +50,24 @@ class App extends React.Component<AppProps, AppState> {
             <>
                 {
                     this.state.ready
-                        ? <ImgListPresentation slideDuration={this.slideDuration} imgAlt={"cat"} index={this.state.index} images={this.state.images} />
+                        ? <ImgListPresentation
+                            slideDuration={this.slideDuration}
+                            imgAlt={"cat"}
+                            index={this.state.index}
+                            images={this.state.images}
+                            onMouseDown={this.pause}
+                            onMouseUp={this.play}
+                        />
                         : <></>
                 }
-                <UI onPrevClick={this.headBack} onNextClick={this.headForward} onPausePlayClick={this.pausePlayHandler} paused={this.state.paused} onIntervalChange={interval => this.setTimeInterval(interval)} minInterval={100} />
+                <UI
+                    onPrevClick={this.headBack}
+                    onNextClick={this.headForward}
+                    onPausePlayClick={this.pausePlayHandler}
+                    paused={this.state.paused}
+                    onIntervalChange={interval => this.setTimeInterval(interval)}
+                    minInterval={100}
+                    ref={ref => this.ui = ref} />
             </>
         )
     }
@@ -101,6 +118,7 @@ class App extends React.Component<AppProps, AppState> {
         if (!this.canMoveForward) return
         this.timeout?.stop()
         this.timeout = new Timeout(this.intervalDuration, this.headForward)
+        this.ui?.restartProgressBar(this.intervalDuration)
     }
 
     pausePlayHandler = () => {
@@ -109,22 +127,24 @@ class App extends React.Component<AppProps, AppState> {
             : this.pause()
     }
 
-    pause() {
+    handleClick = (event: MouseEvent) => {
+        console.log(event)
+    }
+
+    pause = () => {
         if (this.timeout?.state == "running") {
             this.timeout?.pause()
         }
         this.setState({ paused: true })
+        this.ui?.pauseProgressBar()
     }
 
-    play() {
+    play = () => {
         this.setState({ paused: false })
         if (this.timeout?.state == "paused") {
             this.timeout?.resume()
-            return
         }
-        if (this.timeout?.state == "stopped") {
-
-        }
+        this.ui?.resumeProgressBar()
     }
 }
 

@@ -74,13 +74,13 @@ button {
   border-radius: 50%;
 }
 
-.ui-element {
+.ui-button {
   position: fixed;
   opacity: 0.25;
   transition: opacity 250ms ease-out;
 }
 
-.ui-element:hover {
+.ui-button:hover {
   opacity: 0.75;
   transition: opacity 500 ease-out;
   cursor: pointer;
@@ -133,7 +133,7 @@ button {
 }
 
 .ui-hidden {
-  opacity: 0;
+  opacity: 0 !important;
   transition: opacity 500ms ease-in;
 }
 
@@ -146,4 +146,27 @@ button {
 
 .ui-root>* {
   pointer-events: all;
+}
+
+.progress-bar {
+  position: absolute;
+  transition: opacity 250ms ease-out;
+  height: 1.5mm;
+  background-color: black;
+  opacity: 0.25;
+  bottom: 0px;
+}
+
+#progress-bar-elapsed {
+  left: 0;
+  width: 0%;
+  background-color: black;
+  opacity: 0.75;
+}
+
+#progress-bar-pending {
+  right: 0;
+  width: 100%;
+  background-color: black;
+  opacity: 0.25;
 }

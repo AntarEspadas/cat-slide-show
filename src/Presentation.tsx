@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 
 export class Presentation extends React.Component<
   PresentationProps,
@@ -21,6 +21,8 @@ export class Presentation extends React.Component<
           offset={slideProps[0].offset}
           hidden={slideProps[0].hidden}
           slideDuration={slideProps[0].slideDuration}
+          onMouseDown={this.props.onMouseDown}
+          onMouseUp={this.props.onMouseUp}
         />
         <Slide
           src={slideProps[1].src}
@@ -28,6 +30,8 @@ export class Presentation extends React.Component<
           offset={slideProps[1].offset}
           hidden={slideProps[1].hidden}
           slideDuration={slideProps[1].slideDuration}
+          onMouseDown={this.props.onMouseDown}
+          onMouseUp={this.props.onMouseUp}
         />
         <Slide
           src={slideProps[2].src}
@@ -35,6 +39,8 @@ export class Presentation extends React.Component<
           offset={slideProps[2].offset}
           hidden={slideProps[2].hidden}
           slideDuration={slideProps[2].slideDuration}
+          onMouseDown={this.props.onMouseDown}
+          onMouseUp={this.props.onMouseUp}
         />
       </div>
     );
@@ -74,6 +80,8 @@ export function Slide(props: SlideProps) {
   } as React.CSSProperties;
   return (
     <div
+      onMouseDown={props.onMouseDown}
+      onMouseUp={props.onMouseUp}
       className="slide"
       style={{
         ...style,
@@ -87,7 +95,7 @@ export function Slide(props: SlideProps) {
         <img className="bg" src={props.src} alt={props.alt} />
       </div>
       <div className="slide-wrapper">
-        <img className="main" src={props.src} alt={props.alt} />
+        <img className="main" draggable={false} src={props.src} alt={props.alt} />
       </div>
     </div>
   );
@@ -99,6 +107,8 @@ export interface SlideProps {
   offset: number;
   hidden: boolean;
   slideDuration: string;
+  onMouseDown?: MouseEventHandler
+  onMouseUp?: MouseEventHandler
 }
 
 export interface SlideInfo {
@@ -110,6 +120,8 @@ export interface SlideInfo {
 export interface PresentationProps {
   slides: Slides;
   slideDuration: string;
+  onMouseDown?: MouseEventHandler
+  onMouseUp?: MouseEventHandler
 }
 
 export type Slides = [SlideInfo, SlideInfo, SlideInfo];
