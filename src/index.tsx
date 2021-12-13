@@ -1,7 +1,7 @@
 import React, { MouseEvent } from "react"
 import ReactDOM from "react-dom"
 import { Presentation, SlideInfo, Slides } from "./Presentation"
-import { CatApiGetter, ImageGetter, CataasGetter } from "./ImageGetters"
+import { CatApiGetter, ImageGetter, CataasGetter, DanbooruImageGetter } from "./ImageGetters"
 import { UI } from "./UI"
 import Visibility from "visibilityjs"
 import { ImgListPresentation } from "./ImgListPresentation"
@@ -15,7 +15,7 @@ class App extends React.Component<AppProps, AppState> {
         ready: false,
         paused: false
     }
-    catGetter: ImageGetter = new CatApiGetter()
+    catGetter: ImageGetter = new DanbooruImageGetter()
 
     canMoveForward = true
     canMoveBack = true

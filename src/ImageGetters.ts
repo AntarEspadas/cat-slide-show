@@ -56,6 +56,38 @@ export class CataasGetter implements ImageGetter {
     }
 }
 
+export class DanbooruImageGetter implements ImageGetter {
+
+    public async get(): Promise<string> {
+        const page = Math.floor(Math.random() * 1000 + 1)
+        const url = `https://danbooru.donmai.us/post/index.json?limit=200&page=${page}&tags=rating:s`
+        const response = await fetch(url)
+        const json = await response.json() as DanbooruPost[]
+        const extensions = ["gif", "png", "jpg"]
+        let post: DanbooruPost
+        while (true) {
+            let postIndex = Math.floor(Math.random() * 200)
+            post = json[postIndex]
+            if (!post.file_url) continue
+            let extension = post.file_url.substring(post.file_url.length - 3).toLowerCase()
+            if (!extensions.find(element => element == extension)) continue
+            break
+        }
+        return post.file_url
+    }
+
+    public get options(): {} {
+        return {}
+    }
+
+    public set options(value: {}) {
+    }
+}
+
+interface DanbooruPost {
+    file_url?: string
+}
+
 export interface ImageGetter {
     get: () => Promise<string>,
     options: object
